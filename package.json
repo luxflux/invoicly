@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
+  "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -17,7 +18,30 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "yarn build",
+    "electron-pack": "electron-builder build -m",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "author": {
+    "name": "Raffael Schmid",
+    "email": "raffael@yux.ch",
+    "url": "https://yux.ch"
+  },
+  "build": {
+    "appId": "ch.yux.invoicly",
+    "productName": "Invoicly",
+    "copyright": "Copyright © 2019 ${author}",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,6 +63,7 @@
     "electron": "^7.1.6",
     "electron-builder": "^21.2.0",
     "prettier": "^1.19.1",
+    "typescript": "^3.7.3",
     "wait-on": "^3.3.0"
   }
 }
