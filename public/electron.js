@@ -5,7 +5,7 @@ const {
 const {
   fork,
 } = require('child_process')
-const findOpenSocket = require('./find-open-socket')
+const findOpenSocket = require('../find-open-socket')
 
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -21,7 +21,7 @@ function createWindow() {
     height: 680,
     webPreferences: {
       nodeIntegration: false,
-      preload: __dirname + '/preload.js'
+      preload: __dirname + '/../preload.js'
     },
   });
   clientWin.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, './build/index.html')}`);
@@ -54,7 +54,7 @@ function createBackgroundWindow(socketName) {
       nodeIntegration: true
     }
   })
-  serverWin.loadURL(`file://${__dirname}/server/dev.html`)
+  serverWin.loadURL(`file://${__dirname}/../server/dev.html`)
 
   serverWin.webContents.on('did-finish-load', () => {
     serverWin.webContents.send('set-socket', {
