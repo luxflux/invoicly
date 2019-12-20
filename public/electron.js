@@ -51,7 +51,7 @@ function createBackgroundWindow(socketName) {
       nodeIntegration: true,
     },
   });
-  serverWin.loadURL(`file://${__dirname}/../server/dev.html`);
+  serverWin.loadURL(`file://${__dirname}/server/dev.html`);
 
   serverWin.webContents.on('did-finish-load', () => {
     serverWin.webContents.send('set-socket', {
@@ -64,7 +64,7 @@ function createBackgroundWindow(socketName) {
 const dbPath = `${app.getPath('userData')}/invoicly.sqlite3`;
 
 function createBackgroundProcess(socketName) {
-  serverProcess = fork(__dirname + '/../server/index.js', ['--subprocess', app.getVersion(), socketName, dbPath]);
+  serverProcess = fork(__dirname + '/server/index.js', ['--subprocess', app.getVersion(), socketName, dbPath]);
 
   serverProcess.on('message', msg => {
     console.log(msg);

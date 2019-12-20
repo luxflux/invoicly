@@ -10,7 +10,9 @@ const initializeDB = path => {
     useNullAsDefault: true,
   });
 
-  return dbConnection.migrate.latest().then(() => {
+  return dbConnection.migrate.latest({
+    directory: __dirname + '/migrations',
+  }).then(() => {
     const db = bookshelf(dbConnection);
 
     models.Product = db.model('Product', {
