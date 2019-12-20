@@ -2,13 +2,14 @@
   "name": "invoicly",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
+  "main": "electron.js",
   "homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "electron-is-dev": "^1.1.0",
+    "node-ipc": "^9.1.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0"

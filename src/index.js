@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import * as IPC from './client-ipc';
+
+IPC.init();
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
