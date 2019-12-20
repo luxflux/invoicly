@@ -1,5 +1,5 @@
-const serverHandlers = require('./server-handlers');
-const ipc = require('./server-ipc');
+const serverHandlers = require('./handlers');
+const ipc = require('./ipc');
 
 let isDev, version;
 
@@ -11,7 +11,6 @@ if (process.argv[2] === '--subprocess') {
   ipc.init(socketName, serverHandlers);
 } else {
   const { ipcRenderer, remote } = require('electron');
-  console.log({ipcRenderer, remote });
   isDev = true;
   version = remote.app.getVersion();
 
