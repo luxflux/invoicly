@@ -1,24 +1,9 @@
-let handlers = {}
+const { Product } = require('./db');
 
-handlers._history = []
+const handlers = {};
 
-handlers['make-factorial'] = async ({ num }) => {
-  handlers._history.push(num)
+handlers['create-product'] = ({ name, price }) => Product.forge({ name, price }).save();
 
-  function fact(n) {
-    if (n === 1) {
-      return 1
-    }
-    return n * fact(n - 1)
-  }
+handlers['fetch-products'] = () => Product.fetchAll();
 
-  console.log('making factorial')
-  return fact(num)
-}
-
-handlers['ring-ring'] = async () => {
-  console.log('picking up the phone')
-  return 'hello!'
-}
-
-module.exports = handlers
+module.exports = handlers;

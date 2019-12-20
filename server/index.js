@@ -1,3 +1,5 @@
+const { dbConnection } = require('./db');
+
 const serverHandlers = require('./handlers');
 const ipc = require('./ipc');
 
@@ -18,5 +20,7 @@ if (process.argv[2] === '--subprocess') {
     ipc.init(name, serverHandlers);
   });
 }
+
+dbConnection.migrate.latest();
 
 console.log(version, isDev);

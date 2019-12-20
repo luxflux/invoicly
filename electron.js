@@ -33,9 +33,13 @@ function createWindow() {
   clientWin.on('closed', () => clientWin = null);
 
   clientWin.webContents.on('did-finish-load', () => {
-    clientWin.webContents.send('set-socket', {
-      name: serverSocket
-    })
+    if (clientWin) {
+      clientWin.webContents.send('set-socket', {
+        name: serverSocket
+      })
+    } else {
+      console.warn('no clientWin!?');
+    }
   })
 }
 
@@ -83,8 +87,6 @@ app.on('ready', async () => {
     createBackgroundProcess(serverSocket)
   }
 })
-
-app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
