@@ -3,6 +3,7 @@ export async function init() {
   const socketName = await window.getServerSocket();
   connectSocket(socketName, () => {
     console.log('Connected!');
+    window.ipcReady = true;
   });
 }
 

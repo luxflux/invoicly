@@ -4,7 +4,7 @@ import './App.css';
 import { send } from './client-ipc';
 
 function App() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(null);
 
   const fetchProducts = () => {
     send('fetch-products').then(products => {
@@ -22,26 +22,32 @@ function App() {
     fetchProducts();
   }, []);
 
+  if (!window.ipcReady) {
+    return <div>Loading App ...</div>;
+  }
   return (
-    <div className="App">
+    <div>
       <button onClick={addProduct}>Create Product</button>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(product => (
-            <tr key={product.id}>
-              <td>{product.name}</td>
-              <td>{product.price}</td>
+      {!products && <div>Loading Products ...</div>}
+      {products && (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map(product => (
+              <tr key={product.id}>
+                <td>{product.name}</td>
+                <td>{product.price}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
