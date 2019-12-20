@@ -1,56 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import { send } from './client-ipc';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { products: [] };
-  }
+function App() {
+  const [products, setProducts] = useState([]);
 
-  componentDidMount() {
-    this.fetchProducts();
-  }
-
-  fetchProducts = () => {
+  const fetchProducts = () => {
     send('fetch-products').then(products => {
-      console.log({ products });
-      this.setState({ products });
+      setProducts(products);
     });
   };
 
-  addProduct = () => {
+  const addProduct = () => {
     send('create-product', { name: 'Product #1', price: '9.99' }).then(() => {
-      this.fetchProducts();
+      fetchProducts();
     });
   };
 
-  render() {
-    return (
-      <div className="App">
-        <button onClick={this.addProduct}>Create Product</button>
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Price</th>
+  return (
+    <div className="App">
+      <button onClick={addProduct}>Create Product</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map(product => (
+            <tr key={product.id}>
+              <td>{product.name}</td>
+              <td>{product.price}</td>
             </tr>
-          </thead>
-          <tbody>
-            {this.state.products.map(product => (
-              <tr key={product.id}>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default App;
