@@ -1,54 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
+import Products from './Products';
+
 import './App.css';
 
-import { send } from './client-ipc';
-
 function App() {
-  const [products, setProducts] = useState(null);
-
-  const fetchProducts = () => {
-    send('fetch-products').then(products => {
-      setProducts(products);
-    });
-  };
-
-  const addProduct = () => {
-    send('create-product', { name: 'Product #1', price: '9.99' }).then(() => {
-      fetchProducts();
-    });
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  if (!window.ipcReady) {
-    return <div>Loading App ...</div>;
-  }
   return (
-    <div>
-      <button onClick={addProduct}>Create Product</button>
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li><Link to="/invoices">Rechnungen</Link></li>
+            <li><Link to="/customers">Kunden</Link></li>
+            <li><Link to="/products">Produkte</Link></li>
+          </ul>
+        </nav>
+      </div>
 
-      {!products && <div>Loading Products ...</div>}
-      {products && (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map(product => (
-              <tr key={product.id}>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+      <Switch>
+        <Route path="/products">
+          <Products />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
