@@ -9,9 +9,10 @@ import { send } from './client-ipc';
 function Products() {
   const [products, setProducts] = useState(null);
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = data => {
+  const onSubmit = (data, event) => {
     send('create-product', data).then(() => {
       fetchProducts();
+      event.target.reset();
     });
   };
 
@@ -69,7 +70,6 @@ function Products() {
               <td>
                 <TableTextInput
                   className={showSkeleton ? 'bp3-skeleton' : null}
-                  type="text"
                   name="name"
                   placeholder="Name"
                   validations={{ required: 'benötigt' }}
@@ -80,7 +80,6 @@ function Products() {
               <td>
                 <TableNumberInput
                   className={showSkeleton ? 'bp3-skeleton' : null}
-                  type="number"
                   name="netPrice"
                   validations={{ required: 'benötigt' }}
                   error={errors.netPrice}
@@ -90,7 +89,6 @@ function Products() {
               <td>
                 <TableNumberInput
                   className={showSkeleton ? 'bp3-skeleton' : null}
-                  type="number"
                   name="grossPrice"
                   validations={{ required: 'benötigt' }}
                   error={errors.grossPrice}

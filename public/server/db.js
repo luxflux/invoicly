@@ -20,6 +20,11 @@ const initializeDB = path => {
       tableName: 'products',
     });
 
+    models.Customer = db.model('Customer', {
+      hasTimestamps: ['createdAt', 'updatedAt'],
+      tableName: 'customers',
+    });
+
     return true;
   });
 };

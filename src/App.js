@@ -4,6 +4,7 @@ import { Navbar, Spinner } from '@blueprintjs/core';
 import * as IPC from './client-ipc';
 
 import Products from './Products';
+import Customers from './Customers';
 
 import './App.css';
 
@@ -43,6 +44,9 @@ function App() {
 
       <div className="app-content">
         <Switch>
+          <Route path="/customers">
+            <Customers />
+          </Route>
           <Route path="/products">
             <Products />
           </Route>

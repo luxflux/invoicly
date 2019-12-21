@@ -5,6 +5,7 @@ export const TableTextInput = props => {
   const { className, type, name, placeholder, error, validations, register } = props;
   const hasError = !!error;
   const intent = hasError ? 'danger' : null;
+
   return (
     <FormGroup helperText={hasError && error.message} intent={intent}>
       <InputGroup
@@ -21,14 +22,13 @@ export const TableTextInput = props => {
 };
 
 export const TableNumberInput = props => {
-  const { className, type, name, error, validations, register } = props;
+  const { className, name, error, validations, register } = props;
   const hasError = !!error;
   const intent = hasError ? 'danger' : null;
   return (
     <FormGroup helperText={hasError && error.message} intent={intent}>
       <NumericInput
         className={className}
-        type={type}
         name={name}
         fill={true}
         intent={intent}
