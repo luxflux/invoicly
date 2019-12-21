@@ -1,9 +1,10 @@
 // Init
+
 export async function init() {
   const socketName = await window.getServerSocket();
-  connectSocket(socketName, () => {
+  return connectSocket(socketName, () => {
     console.log('Connected!');
-    window.ipcReady = true;
+    return true;
   });
 }
 

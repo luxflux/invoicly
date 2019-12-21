@@ -16,7 +16,7 @@ const initializeDB = path => {
     const db = bookshelf(dbConnection);
 
     models.Product = db.model('Product', {
-      hasTimestamps: true,
+      hasTimestamps: ['createdAt', 'updatedAt'],
       tableName: 'products',
     });
 

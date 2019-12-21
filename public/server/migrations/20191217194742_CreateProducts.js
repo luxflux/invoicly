@@ -1,11 +1,12 @@
 exports.up = function(knex) {
   return knex.schema.createTable('products', table => {
     table.increments('id').notNullable();
-    table.decimal('net_price').notNullable();
-    table.decimal('gross_price').notNullable();
+    table.decimal('netPrice').notNullable();
+    table.decimal('grossPrice').notNullable();
     table.string('name').notNullable();
-    table.datetime('created_at').notNullable();
-    table.datetime('updated_at').notNullable();
+    table.boolean('archived').default(false).notNullable();
+    table.datetime('createdAt').notNullable();
+    table.datetime('updatedAt').notNullable();
   });
 };
 

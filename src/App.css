@@ -1,0 +1,5 @@
+@import '~@blueprintjs/core/lib/css/blueprint.css';
+
+.app-content {
+  margin-top: 1rem;
+}

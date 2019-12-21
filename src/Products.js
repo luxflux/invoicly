@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import useForm from 'react-hook-form';
+import { H1, Button, HTMLTable } from '@blueprintjs/core';
+
+import { TableTextInput, TableNumberInput } from './TableInputs';
 
 import { send } from './client-ipc';
 
 function Products() {
   const [products, setProducts] = useState(null);
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   const onSubmit = data => {
     send('create-product', data).then(() => {
       fetchProducts();
@@ -18,77 +21,95 @@ function Products() {
     });
   };
 
-  const archiveProduct = () => {
-    //
+  const setArchived = (id, archived) => {
+    send('product-set-archived', { id, archived }).then(() => {
+      fetchProducts();
+    });
   };
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  if (!window.ipcReady) {
-    return <div>Loading App ...</div>;
-  }
+  const showSkeleton = !products;
+
   return (
     <div>
-      {!products && <div>Loading Products ...</div>}
-      {products && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Reseller Preis</th>
-                <th>Kunden Preis</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map(product => (
-                <tr key={product.id}>
-                  <td>{product.name}</td>
-                  <td>{product.net_price}</td>
-                  <td>{product.gross_price}</td>
-                  <td>
-                    <button onClick={archiveProduct}>Archivieren</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
+      <H1>Produkte</H1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <HTMLTable>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Reseller Preis</th>
+              <th>Kunden Preis</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {(products || []).map(product => (
+              <tr key={product.id}>
+                <td>{product.name}</td>
+                <td>{product.netPrice}</td>
+                <td>{product.grossPrice}</td>
                 <td>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    ref={register({ required: true })}
+                  <Button
+                    intent={product.archived ? 'success' : 'danger'}
+                    icon={product.archived ? 'unarchive' : 'archive'}
+                    text={product.archived ? 'Aktivieren' : 'Archivieren'}
+                    small={true}
+                    onClick={() => setArchived(product.id, !product.archived)}
                   />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    name="netPrice"
-                    placeholder="Reseller Preis"
-                    ref={register({ required: true })}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    name="grossPrice"
-                    placeholder="Kunden Preis"
-                    ref={register({ required: true })}
-                  />
-                </td>
-                <td>
-                  <input type="submit" value="Erstellen" />
                 </td>
               </tr>
-            </tfoot>
-          </table>
-        </form>
-      )}
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>
+                <TableTextInput
+                  className={showSkeleton ? 'bp3-skeleton' : null}
+                  type="text"
+                  name="name"
+                  placeholder="Name"
+                  validations={{ required: 'benötigt' }}
+                  error={errors.name}
+                  register={register}
+                />
+              </td>
+              <td>
+                <TableNumberInput
+                  className={showSkeleton ? 'bp3-skeleton' : null}
+                  type="number"
+                  name="netPrice"
+                  validations={{ required: 'benötigt' }}
+                  error={errors.netPrice}
+                  register={register}
+                />
+              </td>
+              <td>
+                <TableNumberInput
+                  className={showSkeleton ? 'bp3-skeleton' : null}
+                  type="number"
+                  name="grossPrice"
+                  validations={{ required: 'benötigt' }}
+                  error={errors.grossPrice}
+                  register={register}
+                />
+              </td>
+              <td>
+                <Button
+                  className={showSkeleton ? 'bp3-skeleton' : null}
+                  type="submit"
+                  intent="primary"
+                  icon="add"
+                  text="Erstellen"
+                />
+              </td>
+            </tr>
+          </tfoot>
+        </HTMLTable>
+      </form>
     </div>
   );
 }
