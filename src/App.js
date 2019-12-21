@@ -5,6 +5,8 @@ import * as IPC from './client-ipc';
 
 import Products from './Products';
 import Customers from './Customers';
+import InvoiceList from './InvoiceList';
+import InvoiceEdit from './InvoiceEdit';
 
 import './App.css';
 
@@ -44,10 +46,16 @@ function App() {
 
       <div className="app-content">
         <Switch>
-          <Route path="/customers">
+          <Route path="/invoices/:invoiceId/edit">
+            <InvoiceEdit />
+          </Route>
+          <Route exact={true} path="/invoices">
+            <InvoiceList />
+          </Route>
+          <Route exact={true} path="/customers">
             <Customers />
           </Route>
-          <Route path="/products">
+          <Route exact={true} path="/products">
             <Products />
           </Route>
         </Switch>

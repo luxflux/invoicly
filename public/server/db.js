@@ -10,23 +10,53 @@ const initializeDB = path => {
     useNullAsDefault: true,
   });
 
-  return dbConnection.migrate.latest({
-    directory: __dirname + '/migrations',
-  }).then(() => {
-    const db = bookshelf(dbConnection);
+  return dbConnection.migrate
+    .latest({
+      directory: __dirname + '/migrations',
+    })
+    .then(() => {
+      const db = bookshelf(dbConnection);
 
-    models.Product = db.model('Product', {
-      hasTimestamps: ['createdAt', 'updatedAt'],
-      tableName: 'products',
+      models.Product = db.model('Product', {
+        hasTimestamps: ['createdAt', 'updatedAt'],
+        tableName: 'products',
+        lineItems() {
+          return this.hasMany('InvoiceLineItem', 'invoiceId');
+        },
+      });
+
+      models.Customer = db.model('Customer', {
+        hasTimestamps: ['createdAt', 'updatedAt'],
+        tableName: 'customers',
+        lineItems() {
+          return this.hasMany('InvoiceLineItem', 'customerId');
+        },
+      });
+
+      models.Invoice = db.model('Invoice', {
+        hasTimestamps: ['createdAt', 'updatedAt'],
+        tableName: 'invoices',
+        customer() {
+          return this.belongsTo('Customer', 'customerId');
+        },
+        lineItems() {
+          return this.hasMany('InvoiceLineItem', 'invoiceId');
+        },
+      });
+
+      models.InvoiceLineItem = db.model('InvoiceLineItem', {
+        hasTimestamps: ['createdAt', 'updatedAt'],
+        tableName: 'invoiceLineItems',
+        invoice() {
+          return this.belongsTo('Invoice', 'invoiceId');
+        },
+        product() {
+          return this.belongsTo('Product', 'productId');
+        },
+      });
+
+      return true;
     });
-
-    models.Customer = db.model('Customer', {
-      hasTimestamps: ['createdAt', 'updatedAt'],
-      tableName: 'customers',
-    });
-
-    return true;
-  });
 };
 
 const model = m => models[m];

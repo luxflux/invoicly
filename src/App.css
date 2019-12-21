@@ -3,3 +3,21 @@
 .app-content {
   margin: 1rem 1rem 0;
 }
+
+.invoice-edit__addresses {
+  display: flex;
+  padding: 2rem 0;
+}
+
+.invoice-edit__me,
+.invoice-edit__customer {
+  width: 15rem;
+}
+
+.invoice-edit__customer {
+  flex: 1;
+}
+
+.invoice-edit__me {
+  flex: 1;
+}
