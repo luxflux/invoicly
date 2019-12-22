@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from 'react-router-dom';
 import { Navbar, Spinner } from '@blueprintjs/core';
 import * as IPC from './client-ipc';
 
@@ -58,6 +58,7 @@ function App() {
           <Route exact={true} path="/products">
             <Products />
           </Route>
+          <Route exact={true} path="/" render={() => <Redirect to="/invoices" />} />
         </Switch>
       </div>
     </Router>
