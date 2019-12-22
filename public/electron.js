@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const { fork } = require('child_process');
+const fs = require('fs');
 const findOpenSocket = require('./find-open-socket');
 
 const path = require('path');
@@ -30,13 +31,9 @@ function createWindow(serverSocket) {
   clientWin.on('closed', () => (clientWin = null));
 
   clientWin.webContents.on('did-finish-load', () => {
-    if (clientWin) {
-      clientWin.webContents.send('set-socket', {
-        name: serverSocket,
-      });
-    } else {
-      console.warn('no clientWin!?');
-    }
+    clientWin.webContents.send('set-socket', {
+      name: serverSocket,
+    });
   });
 }
 
@@ -64,7 +61,12 @@ function createBackgroundWindow(socketName) {
 const dbPath = `${app.getPath('userData')}/invoicly.sqlite3`;
 
 function createBackgroundProcess(socketName) {
-  serverProcess = fork(__dirname + '/server/index.js', ['--subprocess', app.getVersion(), socketName, dbPath]);
+  serverProcess = fork(__dirname + '/server/index.js', [
+    '--subprocess',
+    app.getVersion(),
+    socketName,
+    dbPath,
+  ]);
 
   serverProcess.on('message', msg => {
     console.log(msg);
@@ -100,4 +102,15 @@ app.on('before-quit', () => {
     serverProcess.kill();
     serverProcess = null;
   }
+});
+
+ipcMain.on('save-invoice-pdf', (event, filePath) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  return win.webContents.printToPDF({}).then((data, error) => {
+    if (error) throw error;
+    return fs.writeFile(filePath, data, error => {
+      if (error) throw error;
+      shell.openExternal(`file://${filePath}`);
+    });
+  });
 });

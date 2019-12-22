@@ -31,3 +31,30 @@
 .invoice-line-item__price {
   width: 8rem;
 }
+
+table.bp3-html-table td.price,
+table.bp3-html-table th.price {
+  text-align: right;
+}
+
+.print-show {
+  display: none;
+}
+
+@media print {
+  .navigation {
+    display: none;
+  }
+
+  .app-content {
+    margin: 0;
+  }
+
+  .print-show {
+    display: initial;
+  }
+
+  .print-hide {
+    display: none;
+  }
+}

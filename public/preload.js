@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, remote } = require('electron');
 const isDev = require('electron-is-dev');
 const ipc = require('node-ipc');
 const uuid = require('uuid');
@@ -26,3 +26,5 @@ window.ipcConnect = (id, func) => {
 };
 
 window.uuid = uuid;
+window.ipcRenderer = ipcRenderer;
+window.electronRemote = remote;

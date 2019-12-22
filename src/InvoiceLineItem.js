@@ -17,26 +17,42 @@ function InvoiceLineItem({ lineItem, products, showSkeleton, onChange, removeLin
     <tr className="invoice-line-item">
       <td className="invoice-line-item__name">{product.name}</td>
       <td className="invoice-line-item__quantity">
-        <NumericInput
-          className={showSkeleton ? 'bp3-skeleton' : null}
-          name="quantity"
-          fill={true}
-          onValueChange={quantity => onChange({ quantity })}
-          value={quantity}
-        />
+        <span className="print-show">{quantity}</span>
+        <span className="print-hide">
+          <NumericInput
+            className={showSkeleton ? 'bp3-skeleton' : null}
+            name="quantity"
+            fill={true}
+            onValueChange={quantity => onChange({ quantity })}
+            value={quantity}
+          />
+        </span>
       </td>
-      <td className="invoice-line-item__price">
-        <NumericInput
-          className={showSkeleton ? 'bp3-skeleton' : null}
-          name="price"
-          fill={true}
-          onValueChange={price => onChange({ price })}
-          value={price}
-        />
+      <td className="price invoice-line-item__price">
+        <span className="print-show">
+          <Amount amount={price} />
+        </span>
+        <span className="print-hide">
+          <NumericInput
+            className={showSkeleton ? 'bp3-skeleton' : null}
+            name="price"
+            fill={true}
+            onValueChange={price => onChange({ price })}
+            value={price}
+          />
+        </span>
       </td>
-      <td><Amount amount={currentProductTotal} /></td>
-      <td>
-        <Button icon="remove" minimal={true} intent="danger" onClick={removeLineItem} />
+      <td className="price">
+        <Amount amount={currentProductTotal} />
+      </td>
+      <td className="price">
+        <Button
+          className="print-hide"
+          icon="remove"
+          minimal={true}
+          intent="danger"
+          onClick={removeLineItem}
+        />
       </td>
     </tr>
   );

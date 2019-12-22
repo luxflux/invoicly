@@ -34,6 +34,15 @@ function InvoiceEdit() {
     send('remove-invoice-line-item', id).then(() => fetchInvoice(invoiceId));
   };
 
+  const savePDF = () => {
+    window.electronRemote.dialog
+      .showSaveDialog(window.electronRemote.getCurrentWindow())
+      .then(({ filePath }) => {
+        console.log(filePath);
+        console.log(window.ipcRenderer.send('save-invoice-pdf', filePath));
+      });
+  };
+
   const customer = (invoice && invoice.customer) || {};
   const me = {
     name: 'Melanie Schmid',
@@ -88,8 +97,8 @@ function InvoiceEdit() {
           <tr>
             <th>Produkt</th>
             <th>Anzahl</th>
-            <th>Stückpreis</th>
-            <th>Total</th>
+            <th className="price">Stückpreis</th>
+            <th className="price">Total</th>
             <th></th>
           </tr>
         </thead>
@@ -108,26 +117,30 @@ function InvoiceEdit() {
         <tfoot>
           <tr>
             <td colSpan="3">
-              <Select
-                className={showSkeleton ? 'bp3-skeleton' : null}
-                items={products || []}
-                itemRenderer={(product, { handleClick }) => (
-                  <MenuItem key={product.id} onClick={handleClick} text={product.name} />
-                )}
-                onItemSelect={createLineItem}
-                noResults={<MenuItem disabled={true} text="No results." />}
-              >
-                <Button
-                  text="Neues Produkt hinzufügen"
-                  rightIcon="double-caret-vertical"
-                  fill={true}
-                />
-              </Select>
+              <strong className="print-show">Total</strong>
+              <span className="print-hide">
+                <Select
+                  className={showSkeleton ? 'bp3-skeleton' : null}
+                  items={products || []}
+                  itemRenderer={(product, { handleClick }) => (
+                    <MenuItem key={product.id} onClick={handleClick} text={product.name} />
+                  )}
+                  onItemSelect={createLineItem}
+                  noResults={<MenuItem disabled={true} text="No results." />}
+                >
+                  <Button
+                    text="Neues Produkt hinzufügen"
+                    rightIcon="double-caret-vertical"
+                    fill={true}
+                  />
+                </Select>
+              </span>
             </td>
-            <th>{invoice && <Amount amount={invoice.total} />}</th>
+            <th className="price">{invoice && <Amount amount={invoice.total} />}</th>
           </tr>
         </tfoot>
       </HTMLTable>
+      <Button className="print-hide" icon="download" text="PDF speichern" onClick={savePDF} />
     </div>
   );
 }

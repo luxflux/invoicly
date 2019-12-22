@@ -28,7 +28,7 @@ function App() {
 
   return (
     <Router>
-      <Navbar>
+      <Navbar className="navigation">
         <Navbar.Group align="left">
           <Navbar.Heading>Invoicly</Navbar.Heading>
           <Navbar.Divider />
