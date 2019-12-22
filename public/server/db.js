@@ -42,6 +42,13 @@ const initializeDB = path => {
         lineItems() {
           return this.hasMany('InvoiceLineItem', 'invoiceId');
         },
+        initialize() {
+          this.on('fetching fetching:collection', (model, columns, options) => {
+            options.query.select(db.knex.raw(
+              `(SELECT SUM(quantity * price) FROM invoiceLineItems WHERE invoiceLineItems.invoiceId = invoices.id) AS total`
+            ));
+          });
+        },
       });
 
       models.InvoiceLineItem = db.model('InvoiceLineItem', {

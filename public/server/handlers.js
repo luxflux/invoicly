@@ -36,10 +36,13 @@ handlers['customer-set-archived'] = ({ id, archived }) => {
 
 const mapInvoice = invoice => {
   const number = `R${invoice.attributes.id}`;
+  console.log({ invoice });
   return {
     number,
     customer: invoice.relations.customer,
+    lineItems: invoice.relations.lineItems,
     ...invoice.attributes,
+    total: invoice.attributes.total || 0,
   };
 };
 
@@ -54,7 +57,23 @@ handlers['create-invoice'] = data =>
     .then(mapInvoice);
 handlers['fetch-invoice'] = id => {
   const Invoice = model('Invoice');
-  return new Invoice({ id }).fetch({ withRelated: ['customer'] }).then(mapInvoice);
+  return new Invoice({ id }).fetch({ withRelated: ['customer', 'lineItems'] }).then(mapInvoice);
+};
+
+const mapInvoiceLineItem = lineItem => lineItem.attributes;
+
+handlers['create-invoice-line-item'] = data =>
+  model('InvoiceLineItem')
+    .forge(data)
+    .save()
+    .then(mapInvoiceLineItem);
+handlers['update-invoice-line-item'] = ({ id, data }) => {
+  const InvoiceLineItem = model('InvoiceLineItem');
+  return new InvoiceLineItem({ id }).save(data, { patch: true }).then(mapInvoiceLineItem);
+};
+handlers['remove-invoice-line-item'] = id => {
+  const InvoiceLineItem = model('InvoiceLineItem');
+  return new InvoiceLineItem({ id }).destroy();
 };
 
 module.exports = handlers;

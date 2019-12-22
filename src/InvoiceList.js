@@ -48,8 +48,6 @@ function InvoiceList() {
 
   const showSkeleton = !invoices || !customers;
 
-  console.log({ errors });
-
   return (
     <div>
       <H1>Rechnungen</H1>

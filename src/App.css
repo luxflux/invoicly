@@ -21,3 +21,13 @@
 .invoice-edit__me {
   flex: 1;
 }
+
+.invoice-line-item__name {
+  width: 50%;
+}
+.invoice-line-item__quantity {
+  width: 6rem;
+}
+.invoice-line-item__price {
+  width: 8rem;
+}
