@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NumericInput, Button } from '@blueprintjs/core';
+
+import Amount from './Amount';
 
 function InvoiceLineItem({ lineItem, products, showSkeleton, onChange, removeLineItem }) {
   const { productId, price, quantity } = lineItem;
@@ -32,7 +34,7 @@ function InvoiceLineItem({ lineItem, products, showSkeleton, onChange, removeLin
           value={price}
         />
       </td>
-      <td>{currentProductTotal}</td>
+      <td><Amount amount={currentProductTotal} /></td>
       <td>
         <Button icon="remove" minimal={true} intent="danger" onClick={removeLineItem} />
       </td>

@@ -6,11 +6,12 @@ import { H1, Button, HTMLTable, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
 import { send } from './client-ipc';
+import Amount from './Amount';
 
 function InvoiceList() {
   const [invoices, setInvoices] = useState(null);
   const [customers, setCustomers] = useState(null);
-  const { register, handleSubmit, errors, setValue } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const history = useHistory();
 
@@ -66,7 +67,7 @@ function InvoiceList() {
               <tr key={invoice.id}>
                 <td>{invoice.number}</td>
                 <td>{invoice.customer.name}</td>
-                <td>{invoice.total}</td>
+                <td><Amount amount={invoice.total} /></td>
                 <td>
                   <Link to={`/invoices/${invoice.id}/edit`}>
                     <Button icon="edit" text="Bearbeiten" small={true} />

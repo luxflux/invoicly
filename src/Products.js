@@ -3,6 +3,7 @@ import useForm from 'react-hook-form';
 import { H1, Button, HTMLTable } from '@blueprintjs/core';
 
 import { TableTextInput, TableNumberInput } from './TableInputs';
+import Amount from './Amount';
 
 import { send } from './client-ipc';
 
@@ -51,8 +52,12 @@ function Products() {
             {(products || []).map(product => (
               <tr key={product.id}>
                 <td>{product.name}</td>
-                <td>{product.netPrice}</td>
-                <td>{product.grossPrice}</td>
+                <td>
+                  <Amount amount={product.netPrice} />
+                </td>
+                <td>
+                  <Amount amount={product.grossPrice} />
+                </td>
                 <td>
                   <Button
                     intent={product.archived ? 'success' : 'danger'}

@@ -5,6 +5,7 @@ import { Select } from '@blueprintjs/select';
 
 import { send } from './client-ipc';
 import InvoiceLineItem from './InvoiceLineItem';
+import Amount from './Amount';
 
 function InvoiceEdit() {
   const { invoiceId } = useParams();
@@ -29,7 +30,7 @@ function InvoiceEdit() {
     send('update-invoice-line-item', { id, data }).then(() => fetchInvoice(invoiceId));
   };
 
-  const removeLineItem = (id) => {
+  const removeLineItem = id => {
     send('remove-invoice-line-item', id).then(() => fetchInvoice(invoiceId));
   };
 
@@ -123,9 +124,7 @@ function InvoiceEdit() {
                 />
               </Select>
             </td>
-            <th>
-              {invoice && invoice.total}
-            </th>
+            <th>{invoice && <Amount amount={invoice.total} />}</th>
           </tr>
         </tfoot>
       </HTMLTable>
