@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { H1, H2, HTMLTable, MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
@@ -6,11 +6,13 @@ import { Select } from '@blueprintjs/select';
 import { send } from './client-ipc';
 import InvoiceLineItem from './InvoiceLineItem';
 import Amount from './Amount';
+import SettingsContext from './SettingsContext';
 
 function InvoiceEdit() {
   const { invoiceId } = useParams();
   const [invoice, setInvoice] = useState(null);
   const [products, setProducts] = useState(null);
+  const { settings: me } = useContext(SettingsContext);
 
   const createLineItem = product => {
     const data = {
@@ -44,13 +46,6 @@ function InvoiceEdit() {
   };
 
   const customer = (invoice && invoice.customer) || {};
-  const me = {
-    name: 'Melanie Schmid',
-    street: 'Wasserfuristrasse 1',
-    zipCode: '8542',
-    city: 'Wiesendangen',
-    country: 'Schweiz',
-  };
 
   useEffect(() => {
     fetchInvoice(invoiceId);
