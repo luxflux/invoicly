@@ -38,10 +38,13 @@ function InvoiceEdit() {
 
   const savePDF = () => {
     window.electronRemote.dialog
-      .showSaveDialog(window.electronRemote.getCurrentWindow())
+      .showSaveDialog(window.electronRemote.getCurrentWindow(), {
+        defaultPath: `invoice-${invoice.number}.pdf`,
+      })
       .then(({ filePath }) => {
-        console.log(filePath);
-        console.log(window.ipcRenderer.send('save-invoice-pdf', filePath));
+        if (filePath.length) {
+          window.ipcRenderer.send('save-invoice-pdf', filePath);
+        }
       });
   };
 
