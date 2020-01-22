@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { H1, H2, HTMLTable, MenuItem, Button } from '@blueprintjs/core';
+import { H1, H2, HTMLTable, MenuItem, Button, Text } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
 import { send } from './client-ipc';
@@ -135,6 +135,9 @@ function InvoiceEdit() {
           </tr>
         </tfoot>
       </HTMLTable>
+      <Text tagName="p">
+        Bankverbindung: {me.iban}, {me.name}, {me.street}, {me.zipCode} {me.city}
+      </Text>
       <Button className="print-hide" icon="download" text="PDF speichern" onClick={savePDF} />
     </div>
   );
