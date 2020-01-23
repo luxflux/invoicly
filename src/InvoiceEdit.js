@@ -8,31 +8,6 @@ import InvoiceLineItem from './InvoiceLineItem';
 import Amount from './Amount';
 import SettingsContext from './SettingsContext';
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-
-  const monthNames = [
-    'Januar',
-    'Februar',
-    'März',
-    'April',
-    'Mai',
-    'Juni',
-    'Juli',
-    'August',
-    'September',
-    'Oktober',
-    'November',
-    'Dezember',
-  ];
-
-  const day = date.getDate();
-  const monthIndex = date.getMonth();
-  const year = date.getFullYear();
-
-  return `${day}. ${monthNames[monthIndex]} ${year}`;
-}
-
 function InvoiceEdit() {
   const { invoiceId } = useParams();
   const [invoice, setInvoice] = useState(null);
@@ -89,7 +64,12 @@ function InvoiceEdit() {
       <H1>Rechnung {invoice && invoice.number}</H1>
 
       <Text className={skeletonClass} tagName="p">
-        {!showSkeleton && formatDate(invoice.createdAt)}
+        {!showSkeleton &&
+          new Date(invoice.createdAt).toLocaleDateString('de-CH', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })}
       </Text>
 
       <div className="invoice-edit__addresses">
