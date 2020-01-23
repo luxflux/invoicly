@@ -18,7 +18,7 @@ const longDate = date =>
 
 const isoDate = dateString => {
   const date = new Date(dateString);
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  return `${date.toISOString().split('T')[0]}`;
 };
 
 function InvoiceEdit() {
