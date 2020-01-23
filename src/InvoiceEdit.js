@@ -156,7 +156,15 @@ function InvoiceEdit() {
           </tr>
         </tfoot>
       </HTMLTable>
-      <Text tagName="p">
+      <Text tagName="p" className="invoice__text">
+        {me.invoiceText.split('\n').map((line, index) => (
+          <React.Fragment>
+            <span key={index}>{line}</span>
+            <br />
+          </React.Fragment>
+        ))}
+      </Text>
+      <Text tagName="p" className="invoice__wire-transfer">
         Bankverbindung: {me.iban}, {me.name}, {me.street}, {me.zipCode} {me.city}
       </Text>
       <Button className="print-hide" icon="download" text="PDF speichern" onClick={savePDF} />

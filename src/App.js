@@ -19,6 +19,7 @@ const DEFAULT_SETTINGS = {
   city: '',
   country: '',
   iban: '',
+  invoiceText: '',
 };
 
 function App() {
