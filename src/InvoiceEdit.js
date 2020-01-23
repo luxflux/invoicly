@@ -8,6 +8,19 @@ import InvoiceLineItem from './InvoiceLineItem';
 import Amount from './Amount';
 import SettingsContext from './SettingsContext';
 
+const formatDate = (date, options) => new Date(date).toLocaleDateString('de-CH', options);
+const longDate = date =>
+  formatDate(date, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+const isoDate = dateString => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+};
+
 function InvoiceEdit() {
   const { invoiceId } = useParams();
   const [invoice, setInvoice] = useState(null);
@@ -39,7 +52,7 @@ function InvoiceEdit() {
   const savePDF = () => {
     window.electronRemote.dialog
       .showSaveDialog(window.electronRemote.getCurrentWindow(), {
-        defaultPath: `invoice-${invoice.number}.pdf`,
+        defaultPath: `${customer.name} ${isoDate(invoice.date)}.pdf`,
       })
       .then(({ filePath }) => {
         if (filePath.length) {
@@ -64,12 +77,7 @@ function InvoiceEdit() {
       <H1>Rechnung {invoice && invoice.number}</H1>
 
       <Text className={skeletonClass} tagName="p">
-        {!showSkeleton &&
-          new Date(invoice.createdAt).toLocaleDateString('de-CH', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
+        {!showSkeleton && longDate(invoice.date)}
       </Text>
 
       <div className="invoice-edit__addresses">
