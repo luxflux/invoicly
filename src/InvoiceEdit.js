@@ -8,6 +8,31 @@ import InvoiceLineItem from './InvoiceLineItem';
 import Amount from './Amount';
 import SettingsContext from './SettingsContext';
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+
+  const monthNames = [
+    'Januar',
+    'Februar',
+    'März',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember',
+  ];
+
+  const day = date.getDate();
+  const monthIndex = date.getMonth();
+  const year = date.getFullYear();
+
+  return `${day}. ${monthNames[monthIndex]} ${year}`;
+}
+
 function InvoiceEdit() {
   const { invoiceId } = useParams();
   const [invoice, setInvoice] = useState(null);
@@ -62,6 +87,11 @@ function InvoiceEdit() {
   return (
     <div>
       <H1>Rechnung {invoice && invoice.number}</H1>
+
+      <Text className={skeletonClass} tagName="p">
+        {!showSkeleton && formatDate(invoice.createdAt)}
+      </Text>
+
       <div className="invoice-edit__addresses">
         <div className="invoice-edit__customer">
           <p className={skeletonClass}>
@@ -81,7 +111,7 @@ function InvoiceEdit() {
             <br />
             {me.street}
             <br />
-            {me.zipCode} {customer.city}
+            {me.zipCode} {me.city}
             <br />
             {me.country}
           </p>
@@ -119,7 +149,7 @@ function InvoiceEdit() {
               <span className="print-hide">
                 <Select
                   className={showSkeleton ? 'bp3-skeleton' : null}
-                  items={products || []}
+                  items={(products || []).filter(product => !product.archived)}
                   itemRenderer={(product, { handleClick }) => (
                     <MenuItem key={product.id} onClick={handleClick} text={product.name} />
                   )}

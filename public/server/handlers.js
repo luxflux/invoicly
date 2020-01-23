@@ -2,7 +2,7 @@ const { model } = require('./db');
 
 const handlers = {};
 
-handlers['fetch-products'] = () => model('Product').fetchAll();
+handlers['fetch-products'] = (includeArchived = true) => model('Product').fetchAll();
 handlers['create-product'] = data =>
   model('Product')
     .forge(data)
