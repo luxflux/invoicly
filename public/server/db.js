@@ -23,6 +23,13 @@ const initializeDB = path => {
         lineItems() {
           return this.hasMany('InvoiceLineItem', 'invoiceId');
         },
+        initialize() {
+          this.on('fetching fetching:collection', (model, columns, options) => {
+            options.query.select(db.knex.raw(
+              `(SELECT COUNT(id) FROM invoiceLineItems WHERE invoiceLineItems.productId = products.id) AS itemCount`
+            ));
+          });
+        },
       });
 
       models.Customer = db.model('Customer', {

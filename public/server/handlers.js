@@ -2,7 +2,7 @@ const { model } = require('./db');
 
 const handlers = {};
 
-handlers['fetch-products'] = (includeArchived = true) => model('Product').fetchAll();
+handlers['fetch-products'] = () => model('Product').fetchAll();
 handlers['create-product'] = data =>
   model('Product')
     .forge(data)
@@ -10,6 +10,10 @@ handlers['create-product'] = data =>
 handlers['product-set-archived'] = ({ id, archived }) => {
   const Product = model('Product');
   return new Product({ id }).save({ archived }, { patch: true });
+};
+handlers['remove-product'] = ({ id }) => {
+  const Product = model('Product');
+  return new Product({ id }).destroy();
 };
 
 const mapCustomer = ({ attributes }) => {
@@ -36,7 +40,6 @@ handlers['customer-set-archived'] = ({ id, archived }) => {
 
 const mapInvoice = invoice => {
   const number = `R${invoice.attributes.id}`;
-  console.log({ invoice });
   return {
     number,
     customer: invoice.relations.customer,

@@ -1,11 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import useForm from 'react-hook-form';
-import { H1, Button, HTMLTable } from '@blueprintjs/core';
+import { H1, Button, HTMLTable, ButtonGroup } from '@blueprintjs/core';
 
 import { TableTextInput, TableNumberInput } from './TableInputs';
 import Amount from './Amount';
 
 import { send } from './client-ipc';
+
+function ProductRow(props) {
+  const { product } = props;
+
+  let buttonProps = {};
+  if (product.archived) {
+    buttonProps = {
+      intent: 'success',
+      icon: 'unarchive',
+      text: 'Aktivieren',
+      onClick: props.setArchived,
+    }
+  } else {
+    if (product.itemCount === 0) {
+      buttonProps = {
+        intent: 'danger',
+        icon: 'delete',
+        text: 'Löschen',
+        onClick: props.remove,
+      }
+    } else {
+      buttonProps = {
+        intent: 'danger',
+        icon: 'archive',
+        text: 'Archivieren',
+        onClick: props.setArchived,
+      }
+    }
+  }
+
+  return (
+    <tr key={product.id}>
+      <td>{product.name}</td>
+      <td>
+        <Amount amount={product.netPrice} />
+      </td>
+      <td>
+        <Amount amount={product.grossPrice} />
+      </td>
+      <td>{product.itemCount}</td>
+      <td>
+      <Button
+        small={true}
+        {...buttonProps}
+      />
+      </td>
+    </tr>
+  );
+}
 
 function Products() {
   const [products, setProducts] = useState(null);
@@ -29,6 +78,12 @@ function Products() {
     });
   };
 
+  const remove = (id) => {
+    send('remove-product', { id }).then(() => {
+      fetchProducts();
+    });
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -45,29 +100,17 @@ function Products() {
               <th>Name</th>
               <th>Reseller Preis</th>
               <th>Kunden Preis</th>
+              <th># Verwendet</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {(products || []).map(product => (
-              <tr key={product.id}>
-                <td>{product.name}</td>
-                <td>
-                  <Amount amount={product.netPrice} />
-                </td>
-                <td>
-                  <Amount amount={product.grossPrice} />
-                </td>
-                <td>
-                  <Button
-                    intent={product.archived ? 'success' : 'danger'}
-                    icon={product.archived ? 'unarchive' : 'archive'}
-                    text={product.archived ? 'Aktivieren' : 'Archivieren'}
-                    small={true}
-                    onClick={() => setArchived(product.id, !product.archived)}
-                  />
-                </td>
-              </tr>
+              <ProductRow
+                product={product}
+                setArchived={() => setArchived(product.id, !product.archived)}
+                remove={() => remove(product.id)}
+              />
             ))}
           </tbody>
           <tfoot>
